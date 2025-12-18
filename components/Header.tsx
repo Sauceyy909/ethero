@@ -1,13 +1,14 @@
 
 import React from 'react';
-import { Wallet, Bell, Search } from 'lucide-react';
+import { Wallet, Bell, Search, Zap } from 'lucide-react';
 
 interface HeaderProps {
   appName: string;
   wallet: string;
+  onImportClick: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ appName, wallet }) => {
+const Header: React.FC<HeaderProps> = ({ appName, wallet, onImportClick }) => {
   return (
     <header className="h-20 border-b border-slate-800 flex items-center justify-between px-8 bg-slate-950/50 backdrop-blur-md sticky top-0 z-30">
       <div className="flex items-center gap-4 w-1/3">
@@ -27,15 +28,25 @@ const Header: React.FC<HeaderProps> = ({ appName, wallet }) => {
           <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-slate-950"></span>
         </button>
 
-        <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-full py-1.5 pl-2 pr-4 shadow-xl">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center">
-            <Wallet className="w-4 h-4 text-white" />
+        {wallet ? (
+          <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-full py-1.5 pl-2 pr-4 shadow-xl">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-500 to-sky-600 flex items-center justify-center">
+              <Zap className="w-4 h-4 text-white animate-pulse" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[10px] text-emerald-500 uppercase font-black tracking-wider leading-none">MetaMask Linked</span>
+              <span className="text-xs font-mono text-slate-300 font-semibold">{wallet.slice(0, 6)}...{wallet.slice(-4)}</span>
+            </div>
           </div>
-          <div className="flex flex-col">
-            <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider leading-none">Connected Wallet</span>
-            <span className="text-xs font-mono text-slate-300 font-semibold">{wallet.slice(0, 6)}...{wallet.slice(-4)}</span>
-          </div>
-        </div>
+        ) : (
+          <button 
+            onClick={onImportClick}
+            className="flex items-center gap-2 bg-white hover:bg-sky-400 text-black px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg shadow-white/10"
+          >
+            <Wallet className="w-4 h-4" />
+            Connect MetaMask
+          </button>
+        )}
       </div>
     </header>
   );

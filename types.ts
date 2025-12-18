@@ -23,7 +23,8 @@ export interface Transaction {
 }
 
 export interface UserSettings {
-  payoutWallet: string;
+  payoutWallet: string; // The address where they receive funds if they sell
+  importedWallet: string; // Their active trading identity/address
   displayName: string;
 }
 
