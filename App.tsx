@@ -15,18 +15,25 @@ const App: React.FC = () => {
   const [items, setItems] = useState<ImageItem[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [userSettings, setUserSettings] = useState<UserSettings>(() => {
-    const saved = localStorage.getItem('etheron_settings');
-    return saved ? JSON.parse(saved) : {
-      payoutWallet: "",
-      importedWallet: "",
-      displayName: "Anonymous Trader"
-    };
+    try {
+      const saved = localStorage.getItem('etheron_settings');
+      return saved ? JSON.parse(saved) : {
+        payoutWallet: "",
+        importedWallet: "",
+        displayName: "Anonymous Trader"
+      };
+    } catch (e) {
+      return {
+        payoutWallet: "",
+        importedWallet: "",
+        displayName: "Anonymous Trader"
+      };
+    }
   });
   const [pendingTx, setPendingTx] = useState<Transaction | null>(null);
 
   // MetaMask Connection Logic
   const connectMetaMask = useCallback(async () => {
-    // Cast window to any to access the ethereum provider injected by MetaMask
     const ethereum = (window as any).ethereum;
     if (typeof ethereum !== 'undefined') {
       try {
@@ -47,7 +54,6 @@ const App: React.FC = () => {
 
   // Sync with MetaMask changes
   useEffect(() => {
-    // Cast window to any to access the ethereum provider injected by MetaMask
     const ethereum = (window as any).ethereum;
     if (typeof ethereum !== 'undefined') {
       const handleAccountsChanged = (accounts: string[]) => {
@@ -67,17 +73,25 @@ const App: React.FC = () => {
 
   // Load persistent data
   useEffect(() => {
-    const savedItems = localStorage.getItem('etheron_items');
-    const savedTxs = localStorage.getItem('etheron_transactions');
-    if (savedItems) setItems(JSON.parse(savedItems));
-    if (savedTxs) setTransactions(JSON.parse(savedTxs));
+    try {
+      const savedItems = localStorage.getItem('etheron_items');
+      const savedTxs = localStorage.getItem('etheron_transactions');
+      if (savedItems) setItems(JSON.parse(savedItems));
+      if (savedTxs) setTransactions(JSON.parse(savedTxs));
+    } catch (e) {
+      console.error("Failed to load data from storage", e);
+    }
   }, []);
 
   // Save persistent data
   useEffect(() => {
-    localStorage.setItem('etheron_items', JSON.stringify(items));
-    localStorage.setItem('etheron_transactions', JSON.stringify(transactions));
-    localStorage.setItem('etheron_settings', JSON.stringify(userSettings));
+    try {
+      localStorage.setItem('etheron_items', JSON.stringify(items));
+      localStorage.setItem('etheron_transactions', JSON.stringify(transactions));
+      localStorage.setItem('etheron_settings', JSON.stringify(userSettings));
+    } catch (e) {
+      console.error("Failed to save data to storage", e);
+    }
   }, [items, transactions, userSettings]);
 
   const handleUpload = (newItem: ImageItem) => {

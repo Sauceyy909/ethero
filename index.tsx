@@ -8,9 +8,14 @@ if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+try {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+} catch (error) {
+  console.error("Fatal Error during initialization:", error);
+  rootElement.innerHTML = `<div style="padding: 20px; color: white; background: #020617; height: 100vh;"><h1>Initialization Error</h1><pre>${error}</pre></div>`;
+}
