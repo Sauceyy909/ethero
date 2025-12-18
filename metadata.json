@@ -1,0 +1,7 @@
+{
+  "name": "Etheron High-Tech Image Exchange",
+  "description": "A professional image trading platform built on Polygon, featuring ETHO token integration, automated NFT minting, and AI-powered image appraisal using Gemini.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
